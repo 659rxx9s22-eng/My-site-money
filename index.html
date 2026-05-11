@@ -3,51 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | Dashboard</title>
+    <title>لوحة تحكم الأرباح</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- واجهة تسجيل الدخول -->
-    <div id="login-container" class="container">
-        <div class="logo">🔐</div>
-        <h2>تسجيل الدخول</h2>
-        <p>الرجاء إدخال البيانات التي استلمتها من المدير</p>
-        <input type="text" id="username" placeholder="اسم المستخدم">
-        <input type="password" id="password" placeholder="كلمة المرور">
-        <button onclick="login()">دخول إلى الحساب</button>
-        <p id="error-msg" class="error">خطأ في اسم المستخدم أو كلمة المرور!</p>
-    </div>
+    <div class="dashboard-container">
+        <header>
+            <h1>لوحة إحصائيات زينب</h1>
+            <p>سجلي دخولكِ لمتابعة الأرباح</p>
+        </header>
 
-    <!-- واجهة الداشبورد -->
-    <div id="dashboard-container" class="container dashboard" style="display: none;">
-        <div class="header">
-            <h3>أهلاً بك، <span id="user-display"></span> ✨</h3>
-            <button class="logout-btn" onclick="logout()">خروج</button>
+        <div class="auth-buttons">
+            <button onclick="login()" class="btn-login">تسجيل دخول</button>
+            <button onclick="register()" class="btn-register">إنشاء حساب جديد</button>
         </div>
-        
+
         <div class="stats-grid">
             <div class="card">
-                <span class="icon">🖱️</span>
-                <h4>عدد الضغطات</h4>
-                <p id="clicks">0</p>
+                <h3>إجمالي النقرات</h3>
+                <p id="total-clicks">0</p>
             </div>
-            
             <div class="card">
-                <span class="icon">💰</span>
-                <h4>الأرباح</h4>
+                <h3>الأرباح الحالية</h3>
                 <p id="earnings">$0.00</p>
             </div>
         </div>
-
-        <div class="user-info">
-            <p>حالة الحساب: <span style="color: #27ae60;">نشط</span></p>
-        </div>
     </div>
 
-    <!-- مكتبات Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    
     <script src="script.js"></script>
 </body>
 </html>
