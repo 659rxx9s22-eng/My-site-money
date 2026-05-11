@@ -1,56 +1,38 @@
-// --- ضع إعدادات Firebase الخاصة بك هنا ---
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "your-app.firebaseapp.com",
-  databaseURL: "https://your-app.firebaseio.com",
-  projectId: "your-app",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
+    apiKey: "AIzaSyBf5F5vhbpu8fjp4rS9M-Uj-gUPR88qbds",
+    authDomain: "my-site-6f7ff.firebaseapp.com",
+    projectId: "my-site-6f7ff",
+    storageBucket: "my-site-6f7ff.firebasestorage.app",
+    messagingSenderId: "171038692625",
+    appId: "1:171038692625:web:8c7742917d4b9d00a768b0",
+    measurementId: "G-WDG48WFSK4",
+    databaseURL: "https://my-site-6f7ff-default-rtdb.firebaseio.com"
 };
 
 // تهيئة Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
 
-function login() {
-    const userInput = document.getElementById('username').value;
-    const passInput = document.getElementById('password').value;
-    const errorMsg = document.getElementById('error-msg');
+// وظيفة مراقبة البيانات وتحديث الواجهة تلقائياً
+function startMonitoring() {
+    const clicksRef = db.ref('stats/clicks');
+    const earningsRef = db.ref('stats/earnings');
 
-    if(!userInput || !passInput) return;
+    // تحديث النقرات
+    clicksRef.on('value', (snapshot) => {
+        const val = snapshot.val() || 0;
+        const el = document.getElementById('total-clicks');
+        if(el) el.innerText = val;
+    });
 
-    // جلب بيانات المستخدم من قاعدة البيانات
-    database.ref('users/' + userInput).once('value').then((snapshot) => {
-        const data = snapshot.val();
-        
-        if (data && data.password === passInput) {
-            errorMsg.style.display = 'none';
-            showDashboard(userInput, data);
-        } else {
-            errorMsg.style.display = 'block';
-        }
-    }).catch(err => {
-        console.error(err);
-        alert("حدث خطأ في الاتصال بقاعدة البيانات");
+    // تحديث الأرباح
+    earningsRef.on('value', (snapshot) => {
+        const val = snapshot.val() || 0;
+        const el = document.getElementById('earnings');
+        if(el) el.innerText = '$' + val.toFixed(2);
     });
 }
 
-function showDashboard(username, data) {
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('dashboard-container').style.display = 'block';
-    document.getElementById('user-display').innerText = username;
-    
-    // ربط البيانات ليتم تحديثها فورياً (Real-time)
-    database.ref('users/' + username).on('value', (snapshot) => {
-        const updatedData = snapshot.val();
-        if(updatedData) {
-            document.getElementById('clicks').innerText = updatedData.clicks || 0;
-            document.getElementById('earnings').innerText = "$" + (updatedData.earnings || 0);
-        }
-    });
-}
-
-function logout() {
-    location.reload();
-}
+window.onload = startMonitoring;
