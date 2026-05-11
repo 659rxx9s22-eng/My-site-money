@@ -1,65 +1,30 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.auth-buttons {
     display: flex;
+    gap: 10px;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    color: #333;
+    margin-bottom: 30px;
 }
 
-.container {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    text-align: center;
-    width: 350px;
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
     transition: 0.3s;
 }
 
-h2 { margin-bottom: 10px; color: #2d3436; }
-p { color: #636e72; font-size: 14px; }
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #dfe6e9;
-    border-radius: 8px;
-    box-sizing: border-box;
-    outline: none;
-}
-
-input:focus { border-color: #667eea; }
-
-button {
-    width: 100%;
-    padding: 12px;
-    background: #6c5ce7;
+.btn-login {
+    background-color: #2b6cb0;
     color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 10px;
 }
 
-button:hover { background: #a29bfe; }
+.btn-register {
+    background-color: #e2e8f0;
+    color: #2d3748;
+}
 
-.error { color: #d63031; font-size: 13px; display: none; margin-top: 10px; }
-
-/* Dashboard Styles */
-.dashboard { width: 450px; }
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-.logout-btn { width: auto; padding: 5px 15px; background: #ff7675; margin: 0; font-size: 13px; }
-
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.card { background: #f8f9fa; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
-.card .icon { font-size: 30px; display: block; margin-bottom: 10px; }
-.card h4 { margin: 0; font-size: 14px; color: #b2bec3; }
-.card p { margin: 5px 0 0 0; font-size: 24px; font-weight: bold; color: #2d3436; }
-
-.user-info { margin-top: 20px; font-size: 12px; border-top: 1px solid #eee; padding-top: 10px; }
+button:active {
+    transform: scale(0.95);
+}
