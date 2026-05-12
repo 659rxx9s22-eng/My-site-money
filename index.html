@@ -3,37 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم الأرباح</title>
-    <link rel="stylesheet" href="style.css">
+    <title>لوحة تحكم | </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+    <style>
+        body { background: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <header>
-            <h1>لوحة إحصائياتك الربحيه </h1>
-            <p>سجلي دخولكِ لمتابعة الأرباح</p>
-        </header>
-
-        <div class="auth-buttons">
-            <button onclick="login()" class="btn-login">تسجيل دخول</button>
-            <button onclick="register()" class="btn-register">إنشاء حساب جديد</button>
-        </div>
-
-        <div class="stats-grid">
-            <div class="card">
-                <h3>إجمالي النقرات</h3>
-                <p id="total-clicks">0</p>
+    <div id="login-page" class="min-h-screen flex items-center justify-center px-4">
+        <div class="glass p-8 w-full max-w-md border border-white">
+            <div class="text-center mb-8">
+                <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-lock text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">تسجيل الدخول</h2>
+                <p class="text-gray-500 text-sm">ادخل بياناتك للوصول للوحة التحكم</p>
             </div>
-            <div class="card">
-                <h3>الأرباح الحالية</h3>
-                <p id="earnings">$0.00</p>
+            <div class="space-y-4">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <input type="password" id="password" placeholder="كلمة المرور" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
+                <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-[1.02]">
+                    دخول للمنصة
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-    
-    <script src="script.js"></script>
+    <div id="dashboard" class="hidden min-h-screen p-4 md:p-8">
+        <div class="max-w-5xl mx-auto">
+            
+            <div class="flex justify-between items-center mb-10 bg-white p-4 rounded-2xl shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chart-line text-blue-600"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">لوحة تحكم زينب</h1>
+                </div>
+                <button id="logoutBtn" class="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition">
+                    <i class="fas fa-sign-out-alt"></i> خروج
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-green-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium mb-1">إجمالي الأرباح</p>
+                        <h3 id="earnings" class="text-3xl font-black text-gray-800">$0.00</h3>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-xl text-green-500">
+                        <i class="fas fa-dollar-sign text-2xl"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-blue-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm font-medium mb-1">عدد النقرات</p>
+                        <h3 id="clicks" class="text-3xl font-black text-gray-800">0</h3>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-xl text-blue-500">
+                        <i class="fas fa-mouse-pointer text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                <div class="mb-4">
+                    <h4 class="text-gray-800 font-bold">الرابط التسويقي الخاص بك</h4>
+                    <p class="text-gray-500 text-xs mt-1">انسخ الرابط وشاركه لبدء جمع النقرات</p>
+                </div>
+                <div class="flex flex-col md:flex-row gap-3">
+                    <input type="text" id="referral-link" readonly value="تحميل الرابط..." 
+                           class="flex-1 p-4 bg-gray-50 border border-gray-200 rounded-xl text-blue-600 font-medium outline-none">
+                    <button onclick="copyLink()" class="bg-gray-800 text-white px-8 py-4 rounded-xl hover:bg-black transition flex items-center justify-center gap-2">
+                        <i class="far fa-copy"></i> نسخ الرابط
+                    </button>
+                </div>
+                <p id="copy-msg" class="text-green-600 text-sm mt-3 font-medium hidden text-center md:text-right">
+                    <i class="fas fa-check-circle ml-1"></i> تم نسخ الرابط بنجاح!
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // إعدادات Firebase الخاصة بك
+        const firebaseConfig = {
+          apiKey: "AIzaSyBf5F5vhbpu8fjp4rS9M-Uj-gUPR88qbds",
+          authDomain: "my-site-6f7ff.firebaseapp.com",
+          databaseURL: "https://my-site-6f7ff-default-rtdb.firebaseio.com",
+          projectId: "my-site-6f7ff",
+          storageBucket: "my-site-6f7ff.firebasestorage.app",
+          messagingSenderId: "171038692625",
+          appId: "1:171038692625:web:4f5d02855d65aef7a768b0",
+          measurementId: "G-BJEJDW8Z47"
+        };
+
+        // تشغيل Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        const loginPage = document.getElementById('login-page');
+        const dashboard = document.getElementById('dashboard');
+
+        // مراقبة حالة تسجيل الدخول
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                loginPage.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                loadUserData(user.uid);
+            } else {
+                loginPage.classList.remove('hidden');
+                dashboard.classList.add('hidden');
+            }
+        });
+
+        // وظيفة الدخول
+        document.getElementById('loginBtn').onclick = () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            if(!email || !pass) return alert("يرجى ملء كافة الحقول");
+            
+            auth.signInWithEmailAndPassword(email, pass).catch(err => {
+                alert("خطأ: " + err.message);
+            });
+        };
+
+        // وظيفة الخروج
+        document.getElementById('logoutBtn').onclick = () => auth.signOut();
+
+        // جلب البيانات من Database
+        function loadUserData(uid) {
+            db.ref('users/' + uid).on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('earnings').innerText = '$' + (data.earnings || '0.00');
+                    document.getElementById('clicks').innerText = data.clicks || '0';
+                    document.getElementById('referral-link').value = window.location.origin + "/ref?id=" + uid;
+                } else {
+                    // إذا كان المستخدم جديد، أنشئ له بيانات افتراضية
+                    db.ref('users/' + uid).set({
+                        earnings: 0,
+                        clicks: 0
+                    });
+                }
+            });
+        }
+
+        // وظيفة النسخ
+        function copyLink() {
+            const linkInput = document.getElementById('referral-link');
+            linkInput.select();
+            document.execCommand('copy');
+            
+            const msg = document.getElementById('copy-msg');
+            msg.classList.remove('hidden');
+            setTimeout(() => msg.classList.add('hidden'), 3000);
+        }
+    </script>
 </body>
 </html>
