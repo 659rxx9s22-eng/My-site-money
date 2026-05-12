@@ -3,100 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم | </title>
+    <title>لوحة تحكم المروج | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 
     <style>
-        body { background: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        body { background: #f8fafc; font-family: 'Cairo', sans-serif; }
         .hidden { display: none !important; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50">
 
-    <div id="login-page" class="min-h-screen flex items-center justify-center px-4">
-        <div class="glass p-8 w-full max-w-md border border-white">
+    <div id="login-page" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md border border-slate-100">
             <div class="text-center mb-8">
-                <div class="bg-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-user-lock text-white text-2xl"></i>
+                <div class="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <i class="fas fa-user-tie text-white text-2xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800">تسجيل الدخول</h2>
-                <p class="text-gray-500 text-sm">ادخل بياناتك للوصول للوحة التحكم</p>
+                <h2 class="text-2xl font-bold text-slate-800">لوحة تحكم المروج</h2>
+                <p class="text-slate-500">سجل دخول لإدارة نظامك التسويقي</p>
             </div>
             <div class="space-y-4">
-                <input type="email" id="email" placeholder="البريد الإلكتروني" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                <input type="password" id="password" placeholder="كلمة المرور" class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg transition duration-300 transform hover:scale-[1.02]">
-                    دخول للمنصة
-                </button>
+                <input type="email" id="email" placeholder="البريد الإلكتروني" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500 text-right">
+                <input type="password" id="password" placeholder="كلمة المرور" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:ring-2 focus:ring-blue-500 text-right">
+                <button id="loginBtn" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-blue-200 shadow-lg hover:bg-blue-700 transition-all">تسجيل الدخول</button>
             </div>
         </div>
     </div>
 
-    <div id="dashboard" class="hidden min-h-screen p-4 md:p-8">
-        <div class="max-w-5xl mx-auto">
+    <div id="dashboard" class="hidden min-h-screen pb-10">
+        <div class="bg-white p-4 shadow-sm sticky top-0 z-10 flex justify-between items-center px-6">
+            <div class="flex items-center gap-2">
+                <div class="bg-blue-100 p-2 rounded-lg"><i class="fas fa-chart-line text-blue-600"></i></div>
+                <span class="font-bold text-slate-700">لوحة تحكم المروج</span>
+            </div>
+            <button id="logoutBtn" class="text-red-500 text-sm font-bold bg-red-50 px-4 py-2 rounded-lg hover:bg-red-100 transition">خروج</button>
+        </div>
+
+        <div class="p-4 max-w-lg mx-auto space-y-6">
             
-            <div class="flex justify-between items-center mb-10 bg-white p-4 rounded-2xl shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <i class="fas fa-chart-line text-blue-600"></i>
-                    </div>
-                    <h1 class="text-xl font-bold text-gray-800">لوحة تحكم زينب</h1>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-3xl shadow-sm border-b-4 border-emerald-400">
+                    <p class="text-xs text-slate-400 font-bold mb-1">أرباح اليوم</p>
+                    <h3 id="today-earnings" class="text-xl font-black text-slate-800">$0.00</h3>
                 </div>
-                <button id="logoutBtn" class="flex items-center gap-2 bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition">
-                    <i class="fas fa-sign-out-alt"></i> خروج
-                </button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-green-500 flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm font-medium mb-1">إجمالي الأرباح</p>
-                        <h3 id="earnings" class="text-3xl font-black text-gray-800">$0.00</h3>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-xl text-green-500">
-                        <i class="fas fa-dollar-sign text-2xl"></i>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-blue-500 flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm font-medium mb-1">عدد النقرات</p>
-                        <h3 id="clicks" class="text-3xl font-black text-gray-800">0</h3>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-xl text-blue-500">
-                        <i class="fas fa-mouse-pointer text-2xl"></i>
-                    </div>
+                <div class="bg-white p-5 rounded-3xl shadow-sm border-b-4 border-blue-400">
+                    <p class="text-xs text-slate-400 font-bold mb-1">إجمالي الأرباح</p>
+                    <h3 id="total-earnings" class="text-xl font-black text-slate-800">$0.00</h3>
                 </div>
             </div>
 
-            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                <div class="mb-4">
-                    <h4 class="text-gray-800 font-bold">الرابط التسويقي الخاص بك</h4>
-                    <p class="text-gray-500 text-xs mt-1">انسخ الرابط وشاركه لبدء جمع النقرات</p>
+            <div class="bg-white p-6 rounded-3xl shadow-sm flex items-center justify-between border border-slate-100">
+                <div>
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">عدد النقرات</p>
+                    <h3 id="clicks" class="text-3xl font-black text-slate-800 mt-1">0</h3>
                 </div>
-                <div class="flex flex-col md:flex-row gap-3">
-                    <input type="text" id="referral-link" readonly value="تحميل الرابط..." 
-                           class="flex-1 p-4 bg-gray-50 border border-gray-200 rounded-xl text-blue-600 font-medium outline-none">
-                    <button onclick="copyLink()" class="bg-gray-800 text-white px-8 py-4 rounded-xl hover:bg-black transition flex items-center justify-center gap-2">
-                        <i class="far fa-copy"></i> نسخ الرابط
+                <div class="bg-blue-50 p-4 rounded-2xl text-blue-500">
+                    <i class="fas fa-mouse-pointer text-2xl"></i>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 p-6 rounded-3xl shadow-lg text-white">
+                <h4 class="font-bold mb-3 text-sm">الرابط التسويقي</h4>
+                <div class="flex gap-2">
+                    <input type="text" id="referral-link" readonly class="flex-1 bg-slate-700 border-none rounded-xl p-3 text-[10px] text-blue-300 outline-none ltr">
+                    <button onclick="copyLink()" class="bg-white text-slate-800 p-3 rounded-xl hover:bg-blue-100 transition">
+                        <i class="far fa-copy"></i>
                     </button>
                 </div>
-                <p id="copy-msg" class="text-green-600 text-sm mt-3 font-medium hidden text-center md:text-right">
-                    <i class="fas fa-check-circle ml-1"></i> تم نسخ الرابط بنجاح!
-                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-wallet text-blue-500"></i> طلب سحب أرباح
+                </h4>
+                <div class="space-y-3">
+                    <select id="withdraw-method" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm appearance-none">
+                        <option value="zain_cash">زين كاش (ZainCash)</option>
+                        <option value="bank_transfer">حوالة بنكية</option>
+                        <option value="usdt">USDT (Crypto)</option>
+                    </select>
+                    <input type="number" id="withdraw-amount" placeholder="حدد المبلغ بالدولار" class="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 outline-none text-sm">
+                    <button onclick="requestWithdraw()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl hover:bg-black transition shadow-lg">إرسال الطلب</button>
+                </div>
             </div>
 
         </div>
     </div>
 
     <script>
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
           apiKey: "AIzaSyBf5F5vhbpu8fjp4rS9M-Uj-gUPR88qbds",
           authDomain: "my-site-6f7ff.firebaseapp.com",
@@ -108,67 +107,54 @@
           measurementId: "G-BJEJDW8Z47"
         };
 
-        // تشغيل Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
 
-        const loginPage = document.getElementById('login-page');
-        const dashboard = document.getElementById('dashboard');
-
-        // مراقبة حالة تسجيل الدخول
         auth.onAuthStateChanged(user => {
             if (user) {
-                loginPage.classList.add('hidden');
-                dashboard.classList.remove('hidden');
-                loadUserData(user.uid);
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadData(user.uid);
             } else {
-                loginPage.classList.remove('hidden');
-                dashboard.classList.add('hidden');
+                document.getElementById('login-page').classList.remove('hidden');
+                document.getElementById('dashboard').classList.add('hidden');
             }
         });
 
-        // وظيفة الدخول
         document.getElementById('loginBtn').onclick = () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("يرجى ملء كافة الحقول");
-            
-            auth.signInWithEmailAndPassword(email, pass).catch(err => {
-                alert("خطأ: " + err.message);
-            });
+            if(!email || !pass) return alert("يرجى ملء الحقول");
+            auth.signInWithEmailAndPassword(email, pass).catch(err => alert("فشل الدخول: " + err.message));
         };
 
-        // وظيفة الخروج
         document.getElementById('logoutBtn').onclick = () => auth.signOut();
 
-        // جلب البيانات من Database
-        function loadUserData(uid) {
-            db.ref('users/' + uid).on('value', (snapshot) => {
+        function loadData(uid) {
+            db.ref('users_data/Zno').on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    document.getElementById('earnings').innerText = '$' + (data.earnings || '0.00');
+                    document.getElementById('total-earnings').innerText = '$' + (data.earnings || '0.00');
+                    document.getElementById('today-earnings').innerText = '$' + (data.today_earnings || '0.00');
                     document.getElementById('clicks').innerText = data.clicks || '0';
-                    document.getElementById('referral-link').value = window.location.origin + "/ref?id=" + uid;
-                } else {
-                    // إذا كان المستخدم جديد، أنشئ له بيانات افتراضية
-                    db.ref('users/' + uid).set({
-                        earnings: 0,
-                        clicks: 0
-                    });
+                    document.getElementById('referral-link').value = window.location.origin + "/ref?id=Zno";
                 }
             });
         }
 
-        // وظيفة النسخ
         function copyLink() {
-            const linkInput = document.getElementById('referral-link');
-            linkInput.select();
+            const link = document.getElementById('referral-link');
+            link.select();
             document.execCommand('copy');
-            
-            const msg = document.getElementById('copy-msg');
-            msg.classList.remove('hidden');
-            setTimeout(() => msg.classList.add('hidden'), 3000);
+            alert("تم نسخ رابط المروج بنجاح!");
+        }
+
+        function requestWithdraw() {
+            const amount = document.getElementById('withdraw-amount').value;
+            const method = document.getElementById('withdraw-method').value;
+            if(!amount || amount <= 0) return alert("يرجى كتابة مبلغ صحيح");
+            alert("تم إرسال طلب سحب مبلغ $" + amount + " عبر " + method + " للمراجعة.");
         }
     </script>
 </body>
